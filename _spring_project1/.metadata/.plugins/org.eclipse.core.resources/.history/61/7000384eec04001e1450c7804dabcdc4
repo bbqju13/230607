@@ -1,0 +1,47 @@
+package com.myweb.www.contorller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.myweb.www.domain.BoardVO;
+import com.myweb.www.service.BoardService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("/board/*")
+@Slf4j
+@Controller
+public class BoardContorller {
+	private static final Logger log = LoggerFactory.getLogger(BoardContorller.class);
+	
+	@Inject
+	private BoardService bsv;
+	
+	@GetMapping("/register")
+	public String registerGet() {
+		return "/board/register";
+	}
+	
+	@PostMapping("/register")
+	public String registerPost(BoardVO bvo, Model m) {
+		log.info(" >>>>> bvo >>>>> : " + bvo.toString());
+		int isOk = bsv.register(bvo);
+		log.info(" >>>>> board register >>>>> : " + (isOk > 0 ? "성공" : "실패"));
+		return "home";
+	}
+	
+	public String boardList() {
+		List<BoardVO> list = bsv.list();
+		log.info(" >>>>> list >>>>> : ");
+		return "home";
+	}
+}
